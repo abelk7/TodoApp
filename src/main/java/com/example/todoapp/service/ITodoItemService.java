@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ITodoItemService {
     List<TodoItem> findAll();
+    TodoItem findById(Long id);
+    TodoItem save(TodoItem todoItem);
 }

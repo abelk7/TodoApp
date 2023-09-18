@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,4 +16,5 @@ public class TodoItem {
     private Long id;
     private String title;
     private boolean completed;
+    private LocalDateTime lastUpdated;
 }
