@@ -24,8 +24,10 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -64,5 +66,21 @@ public class TodoItemControllerTest {
                 .andDo(print())
                 .andExpect(model().attribute("todos", todos))
                 .andExpect(status().isOk());
+    }
+
+    @Order(2)
+    @Test
+    void test_changeStateOfTodoItem() throws Exception {
+        TodoItem todoItem1 = new TodoItem();
+        todoItem1.setId(1L);
+        todoItem1.setTitle("TodoTest1");
+        todoItem1.setCompleted(false);
+
+        when(todoItemService.findById(anyLong())).thenReturn(todoItem1);
+
+        this.mockMvc.perform(post("/1")
+                        .flashAttr("item", todoItem1))
+                .andExpect(view().name("redirect:/"))
+                .andExpect(status().isFound());
     }
 }

@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -17,6 +17,31 @@ public class TodoItemService implements ITodoItemService {
 
     @Override
     public List<TodoItem> findAll() {
-        return todoItemRepository.findAll();
+        List<TodoItem> todos = todoItemRepository.findAll(Sort.by(Sort.Direction.ASC, "lastUpdated"));
+        List<TodoItem> todosCompleted = new ArrayList<>();
+        List<TodoItem> todosUnCompleted = new ArrayList<>();
+
+        for (TodoItem todo: todos) {
+            if(todo.isCompleted()) {
+                todosCompleted.add(todo);
+            }else {
+                todosUnCompleted.add(todo);
+            }
+        }
+        todosCompleted.sort(Comparator.comparing(TodoItem::getLastUpdated));
+        todosUnCompleted.addAll(todosCompleted);
+
+        return todosUnCompleted;
+    }
+
+    @Override
+    public TodoItem findById(Long id) {
+        Optional<TodoItem> todo =  todoItemRepository.findById(id);
+        return todo.orElse(null);
+    }
+
+    @Override
+    public TodoItem save(TodoItem todoItem) {
+        return todoItemRepository.save(todoItem);
     }
 }
