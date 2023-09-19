@@ -1,5 +1,6 @@
 package com.example.todoapp.it;
 
+import com.example.todoapp.exception.TodoItemNotFoundException;
 import com.example.todoapp.model.TodoItem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -12,8 +13,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(JUnitPlatform.class)
@@ -50,6 +56,44 @@ public class TodoItemControllerTestIT {
 
         this.mockMvc.perform(post("/1")
                         .flashAttr("item", todoItem1))
+                .andExpect(view().name("redirect:/"))
+                .andExpect(status().isFound());
+    }
+
+    @Order(3)
+    @Test
+    void test_getTodoItem() throws Exception {
+        this.mockMvc
+                .perform(get("/edit/" + 1))
+                .andExpect(view().name("edit"))
+                .andDo(print())
+                .andExpect(model().attributeExists("todo"))
+                .andExpect(status().isOk());
+    }
+
+    @Order(4)
+    @Test
+    void test_getTodoItem_shoud_thows_TodoItemNotFoundException() throws Exception {
+
+        this.mockMvc
+                .perform(get("/edit/" + 400))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TodoItemNotFoundException))
+                .andExpect(result -> assertEquals("The todo item with id 400 was not found", result.getResolvedException().getMessage()));
+    }
+
+    @Order(5)
+    @Test
+    void test_editTodoItem() throws Exception {
+        TodoItem todoItem1 = new TodoItem();
+        todoItem1.setId(1L);
+        todoItem1.setTitle("TodoTest1");
+        todoItem1.setDescription("Test description 1");
+        todoItem1.setCompleted(false);
+
+
+        this.mockMvc.perform(post("/edit/")
+                        .flashAttr("todo", todoItem1))
                 .andExpect(view().name("redirect:/"))
                 .andExpect(status().isFound());
     }

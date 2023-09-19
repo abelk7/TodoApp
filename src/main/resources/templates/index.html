@@ -65,7 +65,7 @@
                                     style="background-color: #f4f6f7;">
                                     <a class="d-flex" style="text-decoration:none;"
                                        th:href="@{/edit/{id}(id=${item.id})}">
-                                        <form method="post" th:action="@{/{id}(id=${item.id})}" th:object="${test}">
+                                        <form method="post" th:action="@{/{id}(id=${item.id})}" th:object="${item}">
                                             <input aria-label="..." class="form-check-input me-2" th:checked="${item.completed}"
                                                    th:onclick="submit()" type="checkbox"/>
                                         </form>
