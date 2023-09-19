@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet">
+    <title>Todo List</title>
+</head>
+<body>
+<div class="container">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <!--            <div class="col col-xl-10">-->
+            <div class="card" style="width:500px;">
+                <div class="card-body p-5">
+                    <h5 class="card-title text-center mb-5">Todo Detail</h5>
+                    <form th:action="@{/edit/}" th:object="${todo}" method="POST">
+                        <input type="hidden" th:value="${todo.id}" th:field="*{id}" />
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Title</label>
+                            <input type="text" class="form-control" id="exampleInputEmail1" th:value="${todo.title}" th:field="*{title}">
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <label for="exampleFormControlTextarea1">Description</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" cols="100" th:value="${todo.description}" th:field="*{description}"></textarea>
+                        </div>
+                        <div class="form-group mt-4 text-center">
+                            <a th:href="@{/}" class="btn btn-danger" role="button">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
