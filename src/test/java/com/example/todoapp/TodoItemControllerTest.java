@@ -27,6 +27,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -134,5 +135,31 @@ public class TodoItemControllerTest {
                         .flashAttr("todo", todoItem1))
                 .andExpect(view().name("redirect:/"))
                 .andExpect(status().isFound());
+    }
+
+    @Order(6)
+    @Test
+    void test_addTodoItem() throws Exception {
+        TodoItem todoItem1 = new TodoItem();
+        todoItem1.setTitle("TodoTest1");
+
+        when(todoItemService.save(any(TodoItem.class))).thenReturn(todoItem1);
+
+        this.mockMvc.perform(post("/")
+                        .flashAttr("todo", todoItem1))
+                .andExpect(view().name("index"))
+                .andExpect(status().isCreated());
+    }
+
+    @Order(7)
+    @Test
+    void test_addTodoItem_with_EmptyTitle() throws Exception {
+        TodoItem todoItem1 = new TodoItem();
+        todoItem1.setTitle("");
+
+        this.mockMvc.perform(post("/")
+                        .flashAttr("todo", todoItem1))
+                .andExpect(view().name("index"))
+                .andExpect(status().isOk());
     }
 }

@@ -15,6 +15,7 @@ public class TodoItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotEmpty(message = "Title cannot be empty")
     private String title;
     private String description;
     private boolean completed;

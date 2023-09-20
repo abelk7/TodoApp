@@ -29,6 +29,7 @@ public class TodoItemService implements ITodoItemService {
             }
         }
         todosCompleted.sort(Comparator.comparing(TodoItem::getLastUpdated));
+        todosUnCompleted.sort(Comparator.comparing(TodoItem::getLastUpdated).reversed());
         todosUnCompleted.addAll(todosCompleted);
 
         return todosUnCompleted;
